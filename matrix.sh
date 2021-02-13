@@ -1,36 +1,45 @@
 #!/bin/bash
 #set -x
 LOOP=0
+count=0
 WIN_LEN=$(tput cols)
+
+setup(){
+IFS='%'
+}
+
+clean_down(){
+unset IFS
+}
 
 mrand_display() {
 	str=$1
 	num=$2
-	DVAL=$(printf '=%.0s' {1..100})
-	DVAL=$(echo ${DVAL} | sed 's/=/q/g')
-	DVAL+=${str}
-	echo ${DVAL}
-	
+	space=""
+	while [[ ${count} -ne ${WIN_LEN} ]]; do
+		count=$((count+1))
+		space+=" "
+	done
+	space+=${str}
+	echo ${space}
 }
 
 mrand(){
 	chars=abcd1234ABCD
-	#for i in {1..8} ; do
 	for i in {1} ; do
 	    echo -n "${chars:RANDOM%${#chars}:1}"
 	done
-	#sleep 0.1
 	echo
 }
 
 run(){
-	#while [[ ${LOOP} -eq 0 ]]; do
 	VAL=$(mrand)
-	#mrand_display ${VAL} ${WIN_LEN}
-	mrand_display ${VAL} 100
-	#done
+	WIN_LEN=$(jot -r 1  1 ${WIN_LEN})
+	mrand_display ${VAL} ${WIN_LEN}
 }
 
+setup
 run
+clean_down
 
 
